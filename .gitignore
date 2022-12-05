@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/backend/QRFS/.vs
+/backend/QRFS/QRFS/bin/Debug/netcoreapp3.1
+/backend/QRFS/QRFS/obj
