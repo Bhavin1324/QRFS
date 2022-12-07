@@ -47,6 +47,7 @@ namespace QRFS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubDivision(string id, SubDivision subDivision)
         {
+            subDivision.Id = id;
             if (id != subDivision.Id)
             {
                 return BadRequest();
@@ -79,6 +80,7 @@ namespace QRFS.Controllers
         [HttpPost]
         public async Task<ActionResult<SubDivision>> PostSubDivision(SubDivision subDivision)
         {
+            subDivision.Id = Guid.NewGuid().ToString();
             _context.SubDivision.Add(subDivision);
             try
             {

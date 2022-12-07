@@ -11,48 +11,49 @@ namespace QRFS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AreasController : ControllerBase
+    public class PoliceOfficersController : ControllerBase
     {
         private readonly QRFeedbackDBContext _context;
 
-        public AreasController(QRFeedbackDBContext context)
+        public PoliceOfficersController(QRFeedbackDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Areas
+        // GET: api/PoliceOfficers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Area>>> GetArea()
+        public async Task<ActionResult<IEnumerable<PoliceOfficer>>> GetPoliceOfficer()
         {
-            return await _context.Area.ToListAsync();
+            return await _context.PoliceOfficer.Include(x => x.Station).ToListAsync();
         }
 
-        // GET: api/Areas/5
+        // GET: api/PoliceOfficers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Area>> GetArea(string id)
+        public async Task<ActionResult<PoliceOfficer>> GetPoliceOfficer(string id)
         {
-            var area = await _context.Area.FindAsync(id);
+            var policeOfficer = await _context.PoliceOfficer.Where(log => log.Id == id).Include(x => x.Station).FirstAsync();
 
-            if (area == null)
+            if (policeOfficer == null)
             {
                 return NotFound();
             }
 
-            return area;
+            return policeOfficer;
         }
 
-        // PUT: api/Areas/5
+        // PUT: api/PoliceOfficers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutArea(string id, Area area)
+        public async Task<IActionResult> PutPoliceOfficer(string id, PoliceOfficer policeOfficer)
         {
-            area.Id = id;
-            if (id != area.Id)
+            policeOfficer.Id = id;
+            if (id != policeOfficer.Id)
             {
                 return BadRequest();
             }
-            _context.Entry(area).State = EntityState.Modified;
+
+            _context.Entry(policeOfficer).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +61,7 @@ namespace QRFS.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AreaExists(id))
+                if (!PoliceOfficerExists(id))
                 {
                     return NotFound();
                 }
@@ -73,21 +74,21 @@ namespace QRFS.Controllers
             return NoContent();
         }
 
-        // POST: api/Areas
+        // POST: api/PoliceOfficers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Area>> PostArea(Area area)
+        public async Task<ActionResult<PoliceOfficer>> PostPoliceOfficer(PoliceOfficer policeOfficer)
         {
-            area.Id = Guid.NewGuid().ToString();
-            _context.Area.Add(area);
+            policeOfficer.Id = Guid.NewGuid().ToString();
+            _context.PoliceOfficer.Add(policeOfficer);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (AreaExists(area.Id))
+                if (PoliceOfficerExists(policeOfficer.Id))
                 {
                     return Conflict();
                 }
@@ -97,28 +98,28 @@ namespace QRFS.Controllers
                 }
             }
 
-            return CreatedAtAction("GetArea", new { id = area.Id }, area);
+            return CreatedAtAction("GetPoliceOfficer", new { id = policeOfficer.Id }, policeOfficer);
         }
 
-        // DELETE: api/Areas/5
+        // DELETE: api/PoliceOfficers/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Area>> DeleteArea(string id)
+        public async Task<ActionResult<PoliceOfficer>> DeletePoliceOfficer(string id)
         {
-            var area = await _context.Area.FindAsync(id);
-            if (area == null)
+            var policeOfficer = await _context.PoliceOfficer.FindAsync(id);
+            if (policeOfficer == null)
             {
                 return NotFound();
             }
 
-            _context.Area.Remove(area);
+            _context.PoliceOfficer.Remove(policeOfficer);
             await _context.SaveChangesAsync();
 
-            return area;
+            return policeOfficer;
         }
 
-        private bool AreaExists(string id)
+        private bool PoliceOfficerExists(string id)
         {
-            return _context.Area.Any(e => e.Id == id);
+            return _context.PoliceOfficer.Any(e => e.Id == id);
         }
     }
 }

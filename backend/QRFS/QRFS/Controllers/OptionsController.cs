@@ -11,48 +11,49 @@ namespace QRFS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AreasController : ControllerBase
+    public class OptionsController : ControllerBase
     {
         private readonly QRFeedbackDBContext _context;
 
-        public AreasController(QRFeedbackDBContext context)
+        public OptionsController(QRFeedbackDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Areas
+        // GET: api/Options
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Area>>> GetArea()
+        public async Task<ActionResult<IEnumerable<Options>>> GetOptions()
         {
-            return await _context.Area.ToListAsync();
+            return await _context.Options.Include(x => x.Question).ToListAsync();
         }
 
-        // GET: api/Areas/5
+        // GET: api/Options/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Area>> GetArea(string id)
+        public async Task<ActionResult<Options>> GetOptions(string id)
         {
-            var area = await _context.Area.FindAsync(id);
+            var options = await _context.Options.Where(x => x.Id == id).Include(x => x.Question).FirstAsync();
 
-            if (area == null)
+            if (options == null)
             {
                 return NotFound();
             }
 
-            return area;
+            return options;
         }
 
-        // PUT: api/Areas/5
+        // PUT: api/Options/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutArea(string id, Area area)
+        public async Task<IActionResult> PutOptions(string id, Options options)
         {
-            area.Id = id;
-            if (id != area.Id)
+            options.Id= id;
+            if (id != options.Id)
             {
                 return BadRequest();
             }
-            _context.Entry(area).State = EntityState.Modified;
+
+            _context.Entry(options).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +61,7 @@ namespace QRFS.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AreaExists(id))
+                if (!OptionsExists(id))
                 {
                     return NotFound();
                 }
@@ -73,21 +74,21 @@ namespace QRFS.Controllers
             return NoContent();
         }
 
-        // POST: api/Areas
+        // POST: api/Options
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Area>> PostArea(Area area)
+        public async Task<ActionResult<Options>> PostOptions(Options options)
         {
-            area.Id = Guid.NewGuid().ToString();
-            _context.Area.Add(area);
+            options.Id = Guid.NewGuid().ToString();
+            _context.Options.Add(options);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (AreaExists(area.Id))
+                if (OptionsExists(options.Id))
                 {
                     return Conflict();
                 }
@@ -97,28 +98,28 @@ namespace QRFS.Controllers
                 }
             }
 
-            return CreatedAtAction("GetArea", new { id = area.Id }, area);
+            return CreatedAtAction("GetOptions", new { id = options.Id }, options);
         }
 
-        // DELETE: api/Areas/5
+        // DELETE: api/Options/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Area>> DeleteArea(string id)
+        public async Task<ActionResult<Options>> DeleteOptions(string id)
         {
-            var area = await _context.Area.FindAsync(id);
-            if (area == null)
+            var options = await _context.Options.FindAsync(id);
+            if (options == null)
             {
                 return NotFound();
             }
 
-            _context.Area.Remove(area);
+            _context.Options.Remove(options);
             await _context.SaveChangesAsync();
 
-            return area;
+            return options;
         }
 
-        private bool AreaExists(string id)
+        private bool OptionsExists(string id)
         {
-            return _context.Area.Any(e => e.Id == id);
+            return _context.Options.Any(e => e.Id == id);
         }
     }
 }

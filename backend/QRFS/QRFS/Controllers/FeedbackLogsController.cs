@@ -11,48 +11,49 @@ namespace QRFS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AreasController : ControllerBase
+    public class FeedbackLogsController : ControllerBase
     {
         private readonly QRFeedbackDBContext _context;
 
-        public AreasController(QRFeedbackDBContext context)
+        public FeedbackLogsController(QRFeedbackDBContext context)
         {
             _context = context;
         }
 
-        // GET: api/Areas
+        // GET: api/FeedbackLogs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Area>>> GetArea()
+        public async Task<ActionResult<IEnumerable<FeedbackLog>>> GetFeedbackLog()
         {
-            return await _context.Area.ToListAsync();
+            return await _context.FeedbackLog.Include(x => x.Station).ToListAsync();
         }
 
-        // GET: api/Areas/5
+        // GET: api/FeedbackLogs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Area>> GetArea(string id)
+        public async Task<ActionResult<FeedbackLog>> GetFeedbackLog(string id)
         {
-            var area = await _context.Area.FindAsync(id);
+            var feedbackLog = await _context.FeedbackLog.Where(log =>log.Id == id).Include(x => x.Station).FirstAsync();
 
-            if (area == null)
+            if (feedbackLog == null)
             {
                 return NotFound();
             }
 
-            return area;
+            return feedbackLog;
         }
 
-        // PUT: api/Areas/5
+        // PUT: api/FeedbackLogs/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutArea(string id, Area area)
+        public async Task<IActionResult> PutFeedbackLog(string id, FeedbackLog feedbackLog)
         {
-            area.Id = id;
-            if (id != area.Id)
+            feedbackLog.Id = id;
+            if (id != feedbackLog.Id)
             {
                 return BadRequest();
             }
-            _context.Entry(area).State = EntityState.Modified;
+
+            _context.Entry(feedbackLog).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +61,7 @@ namespace QRFS.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AreaExists(id))
+                if (!FeedbackLogExists(id))
                 {
                     return NotFound();
                 }
@@ -73,21 +74,21 @@ namespace QRFS.Controllers
             return NoContent();
         }
 
-        // POST: api/Areas
+        // POST: api/FeedbackLogs
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Area>> PostArea(Area area)
+        public async Task<ActionResult<FeedbackLog>> PostFeedbackLog(FeedbackLog feedbackLog)
         {
-            area.Id = Guid.NewGuid().ToString();
-            _context.Area.Add(area);
+            feedbackLog.Id = Guid.NewGuid().ToString();
+            _context.FeedbackLog.Add(feedbackLog);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (AreaExists(area.Id))
+                if (FeedbackLogExists(feedbackLog.Id))
                 {
                     return Conflict();
                 }
@@ -97,28 +98,28 @@ namespace QRFS.Controllers
                 }
             }
 
-            return CreatedAtAction("GetArea", new { id = area.Id }, area);
+            return CreatedAtAction("GetFeedbackLog", new { id = feedbackLog.Id }, feedbackLog);
         }
 
-        // DELETE: api/Areas/5
+        // DELETE: api/FeedbackLogs/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Area>> DeleteArea(string id)
+        public async Task<ActionResult<FeedbackLog>> DeleteFeedbackLog(string id)
         {
-            var area = await _context.Area.FindAsync(id);
-            if (area == null)
+            var feedbackLog = await _context.FeedbackLog.FindAsync(id);
+            if (feedbackLog == null)
             {
                 return NotFound();
             }
 
-            _context.Area.Remove(area);
+            _context.FeedbackLog.Remove(feedbackLog);
             await _context.SaveChangesAsync();
 
-            return area;
+            return feedbackLog;
         }
 
-        private bool AreaExists(string id)
+        private bool FeedbackLogExists(string id)
         {
-            return _context.Area.Any(e => e.Id == id);
+            return _context.FeedbackLog.Any(e => e.Id == id);
         }
     }
 }

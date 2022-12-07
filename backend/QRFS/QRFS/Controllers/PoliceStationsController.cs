@@ -47,6 +47,7 @@ namespace QRFS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPoliceStation(string id, PoliceStation policeStation)
         {
+            policeStation.Id = id;
             if (id != policeStation.Id)
             {
                 return BadRequest();
@@ -79,6 +80,7 @@ namespace QRFS.Controllers
         [HttpPost]
         public async Task<ActionResult<PoliceStation>> PostPoliceStation(PoliceStation policeStation)
         {
+            policeStation.Id = Guid.NewGuid().ToString();
             _context.PoliceStation.Add(policeStation);
             try
             {

@@ -47,6 +47,7 @@ namespace QRFS.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDistrict(string id, District district)
         {
+            district.Id = id;
             if (id != district.Id)
             {
                 return BadRequest();
@@ -79,6 +80,7 @@ namespace QRFS.Controllers
         [HttpPost]
         public async Task<ActionResult<District>> PostDistrict(District district)
         {
+            district.Id = Guid.NewGuid().ToString();
             _context.District.Add(district);
             try
             {
