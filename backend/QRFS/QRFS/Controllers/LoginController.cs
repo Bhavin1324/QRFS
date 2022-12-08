@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using QRFS.Helper;
@@ -28,18 +29,25 @@ namespace QRFS.Controllers
         public async Task<ActionResult<CitizenLoginCreds>> CitizenLogin(CitizenLoginCreds credentials)
         {
             JWTHelper jwt = new JWTHelper();
-            var payload = new JwtPayload 
+            var payload = new JwtPayload
             {
-                { "Email", credentials.CitizenEmail }
+                { "email", credentials.CitizenEmail }
             };
             string token = jwt.GenToken(
-                payload, 
-                Configuration.GetSection("JWTConfig").GetSection("SECRET_KEY").Value, 
+                payload,
+                Configuration.GetSection("JWTConfig").GetSection("SECRET_KEY").Value,
                 Convert.ToInt32(Configuration.GetSection("JWTConfig").GetSection("LIFETIME_IN_HRS").Value)
             );
-            var message = new Message(new string[] { credentials.CitizenEmail }, "OTP for providing feedback through QRF portal", "Message body");  
+            var message = new Message(new string[] { credentials.CitizenEmail }, "OTP for providing feedback through QRF portal", "Message body");
             await _emailService.SendEmailAsync(message);
-            return new CitizenLoginCreds() { CitizenEmail = credentials.CitizenEmail, Otp = message.Otp, Token = token};
+            return new CitizenLoginCreds() { CitizenEmail = credentials.CitizenEmail, Otp = message.Otp, Token = token };
+        }
+
+        [HttpGet]
+        [Authorize]
+        public string AccessService()
+        {
+            return "Service accessed";
         }
     }
 }

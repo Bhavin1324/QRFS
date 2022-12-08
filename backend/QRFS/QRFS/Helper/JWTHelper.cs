@@ -11,7 +11,6 @@ namespace QRFS.Helper
 {
     public class JWTHelper
     {
-        private IConfiguration Configuration;
         public static SymmetricSecurityKey SIGNIN_KEY;
                
         public string GenToken(JwtPayload payload, string secret, int expiryInHours)
@@ -21,9 +20,11 @@ namespace QRFS.Helper
             var header = new JwtHeader(credentials);
             DateTime Expiry = DateTime.UtcNow.AddHours(Convert.ToInt32(expiryInHours));
             int ts = (int)(Expiry - new DateTime(1970, 1, 1)).TotalSeconds;
+            payload.Add("exp", ts);
             var securityToken = new JwtSecurityToken(header, payload);
             var handler = new JwtSecurityTokenHandler();
             var tokenString = handler.WriteToken(securityToken);
+            Console.WriteLine(tokenString);
             return tokenString;
         }
     }

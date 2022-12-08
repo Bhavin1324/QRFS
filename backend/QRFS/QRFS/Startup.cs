@@ -19,11 +19,9 @@ namespace QRFS
 {
     public class Startup
     {
-        public static SymmetricSecurityKey SIGNIN_KEY;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            SIGNIN_KEY = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("JWTConfig").GetSection("SECRET_KEY").Value));
         }
 
     public IConfiguration Configuration { get; }
@@ -50,14 +48,23 @@ namespace QRFS
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    IssuerSigningKey = SIGNIN_KEY,
-                    ValidateIssuer= true,
-                    ValidateAudience= true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("JWTConfig").GetSection("SECRET_KEY").Value)),
+                    ValidateIssuer= false,
+                    ValidateAudience= false,
                     ValidIssuer = "http://localhost:42100",
                     ValidAudience= "http://localhost:42100",
                     ValidateLifetime= true,
                 };
             });
+            
+            /* Note:
+             * We can set the following configuration
+             * ValidateIssuer = true,
+             * ValidateAudiance = true
+             * But inside the playload we have to provide the `iss` claim and `aud` claim which is "http://localhost:42100" in development mode here
+             * Here we setup this two parameter as 'false'
+             */
+            
             #endregion
 
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
