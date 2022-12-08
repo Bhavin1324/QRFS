@@ -1,12 +1,7 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect } from "react";
-import { IArea } from "../types/Area";
-import { IPoliceOfficer } from "../types/PoliceOfficer";
-import Login from "./components/citizen/Login";
-import { useFetch } from "./hooks/useFetch";
+import CommonRouter from "./components/router/CommonRouter";
 
 function App() {
-  return <Login />;
+  return <CommonRouter />;
 }
 
 export default App;

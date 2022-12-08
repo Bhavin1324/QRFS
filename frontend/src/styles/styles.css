@@ -16,3 +16,13 @@
 .form-control{
     @apply focus:border-teal-600 focus:shadow-[0_0_0_.25rem_rgba(15,118,110,0.25);]
 }
+
+.nav-link{
+    @apply text-teal-700 hover:text-teal-500 focus:text-teal-500
+}
+.nav-active{
+    @apply bg-teal-700 text-white rounded-md focus:text-white hover:text-white
+}
+.t-link-primary{
+    @apply text-lg underline text-teal-700 hover:text-purple-700
+}

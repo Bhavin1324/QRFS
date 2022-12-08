@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace QRFS.Controllers
 {
+    public class OTP { public string Otp { get; set; } }
+
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -24,8 +26,9 @@ namespace QRFS.Controllers
             Configuration = configuration;
         }
 
-        //POST: api/Login
         [HttpPost]
+        [AllowAnonymous]
+        [Route("~/api/login")]
         public async Task<ActionResult<CitizenLoginCreds>> CitizenLogin(CitizenLoginCreds credentials)
         {
             JWTHelper jwt = new JWTHelper();
@@ -40,14 +43,24 @@ namespace QRFS.Controllers
             );
             var message = new Message(new string[] { credentials.CitizenEmail }, "OTP for providing feedback through QRF portal", "Message body");
             await _emailService.SendEmailAsync(message);
-            return new CitizenLoginCreds() { CitizenEmail = credentials.CitizenEmail, Otp = message.Otp, Token = token };
+
+            // Storing OTP and Token in session
+            HttpContext.Session.SetString("Token", token);
+            HttpContext.Session.SetString("OTP",message.Otp.ToString());
+
+            return new CitizenLoginCreds() { CitizenEmail = credentials.CitizenEmail, Token = token, loginSuccess= false };
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public string AccessService()
+        [Route("~/api/varify")]
+        public ActionResult<CitizenLoginCreds> VerifyOtp(OTP otp)
         {
-            return "Service accessed";
+            if(Convert.ToInt32(HttpContext.Session.GetString("OTP")) == Convert.ToInt32(otp.Otp))
+            {
+                return new CitizenLoginCreds() { loginSuccess = true };
+            }
+            return new CitizenLoginCreds() { loginSuccess = false };
         }
     }
 }

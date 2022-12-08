@@ -31,6 +31,16 @@ namespace QRFS
         {
             services.AddCors();
 
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            #region Session configuration
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout= TimeSpan.FromMinutes(60);
+            });
+            #endregion
+
             #region SMTP service registration
             //Service for registering email configuration
             var emailConfig = Configuration.GetSection("SMTPConfig").Get<SMTPConfig>();
@@ -67,8 +77,6 @@ namespace QRFS
             
             #endregion
 
-            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
             #region Database connection string registration
             services.AddDbContext<QRFeedbackDBContext>(options =>
             {
@@ -91,6 +99,7 @@ namespace QRFS
                 .AllowAnyMethod()
                 .AllowAnyHeader();
             });
+            app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

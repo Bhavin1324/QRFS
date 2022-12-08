@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HttpMethods } from "../../types/Common";
 
 export function useFetch<T>(url: string, method?: HttpMethods, payload?: T) {

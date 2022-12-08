@@ -1,10 +1,10 @@
-import LoginCard from "./LoginCard";
+import { Outlet } from "react-router-dom";
 
 function Login() {
   return (
     <>
       <div className="background"></div>
-      <LoginCard/>
+      <Outlet />
     </>
   );
 }
