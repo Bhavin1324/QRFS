@@ -1,25 +1,37 @@
-import { useState } from "react";
-import { HttpMethods } from "../../types/Common";
+import { HttpMethods } from "../types/Common";
 
-export function useFetch<T>(url: string, method?: HttpMethods, payload?: T) {
+export function useFetch<T>(
+  url: string,
+  method?: HttpMethods,
+  payload?: T,
+  token?: string
+) {
   method = method || "GET";
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   async function MakeHttpRequest() {
     const response = await fetch(
       url,
       method !== "GET"
         ? {
             method: method,
-            headers: { "content-type": "application/json" },
+            headers: token
+              ? {
+                  Authorization: `Bearer ${token}`,
+                  "content-type": "application/json",
+                }
+              : { "content-type": "application/json" },
             body: JSON.stringify(payload),
+          }
+        : token
+        ? {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         : {}
     );
     const result = await response.json();
-    setData(result);
-    setIsLoading(false);
+    return result;
   }
 
-  return { data, isLoading, MakeHttpRequest };
+  return MakeHttpRequest;
 }

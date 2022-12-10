@@ -1,7 +1,7 @@
 import React from "react";
 
 function FeedbackForm() {
-  return <div>FeedbackForm</div>;
+  return <div>This is feedback form</div>;
 }
 
 export default FeedbackForm;
