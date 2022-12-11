@@ -32,8 +32,7 @@ function LoginCard(props: ILoginCardProps) {
   const varifyReq = useFetch(
     process.env.REACT_APP_BASE_URL + ApiKeysEnum.VARIFY_OTP,
     "POST",
-    { otp: formValues.otp.toString() },
-    response.token
+    { otp: formValues.otp.toString() }
   );
 
   function Validate(values: {
@@ -56,6 +55,7 @@ function LoginCard(props: ILoginCardProps) {
     }
     return err;
   }
+
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -104,16 +104,15 @@ function LoginCard(props: ILoginCardProps) {
     } else {
       console.log("ERROR: ", errors);
       if (Object.keys(errors).length === 0) {
-        const { token, citizenEmail } = response;
-        if (token) localStorage.setItem("token", token);
-        localStorage.setItem("cz", citizenEmail);
-
         const result: ICitizenCred = await varifyReq();
-        const { loginSuccess } = result;
-        console.log("Login success ", loginSuccess);
-        setResponse({ ...response, loginSuccess: loginSuccess });
-
-        if (loginSuccess) {
+        console.log("Login success ", result.loginSuccess);
+        if (result.token && result.loginSuccess) {
+          setResponse({
+            ...response,
+            loginSuccess: result.loginSuccess,
+            token: result.token,
+          });
+          localStorage.setItem("token", result.token);
           navigate("/plane/fform");
         } else {
           const err = Validate(formValues);

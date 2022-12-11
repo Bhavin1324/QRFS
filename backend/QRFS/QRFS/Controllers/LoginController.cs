@@ -8,6 +8,7 @@ using QRFS.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace QRFS.Controllers
@@ -31,36 +32,35 @@ namespace QRFS.Controllers
         [Route("~/api/login")]
         public async Task<ActionResult<CitizenLoginCreds>> CitizenLogin(CitizenLoginCreds credentials)
         {
-            JWTHelper jwt = new JWTHelper();
-            var payload = new JwtPayload
-            {
-                { "email", credentials.CitizenEmail }
-            };
-            string token = jwt.GenToken(
-                payload,
-                Configuration.GetSection("JWTConfig").GetSection("SECRET_KEY").Value,
-                Convert.ToInt32(Configuration.GetSection("JWTConfig").GetSection("LIFETIME_IN_HRS").Value)
-            );
             var message = new Message(new string[] { credentials.CitizenEmail }, "OTP for providing feedback through QRF portal", "Message body");
             await _emailService.SendEmailAsync(message);
-
-            // Storing OTP and Token in session
-            HttpContext.Session.SetString("Token", token);
-            HttpContext.Session.SetString("OTP",message.Otp.ToString());
-
-            return new CitizenLoginCreds() { CitizenEmail = credentials.CitizenEmail, Token = token, loginSuccess= false };
+            HttpContext.Session.SetString("OTP",message.Otp.ToString()); //Storing OTP in session
+            HttpContext.Session.SetString("Email", credentials.CitizenEmail); // Storing current user email in session
+            return new CitizenLoginCreds() { CitizenEmail = credentials.CitizenEmail, LoginSuccess= false };
         }
 
         [HttpPost]
-        [Authorize]
+        [AllowAnonymous]
         [Route("~/api/varify")]
         public ActionResult<CitizenLoginCreds> VerifyOtp(OTP otp)
         {
-            if(Convert.ToInt32(HttpContext.Session.GetString("OTP")) == Convert.ToInt32(otp.Otp))
+            var storedOtp = HttpContext.Session.GetString("OTP");
+            var storedEmail = HttpContext.Session.GetString("Email");
+            if(otp.Otp == storedOtp)
             {
-                return new CitizenLoginCreds() { loginSuccess = true };
+                JWTHelper jwt = new JWTHelper();
+                var payload = new JwtPayload
+                {
+                { "email", storedEmail }
+                };
+                string token = jwt.GenToken(
+                    payload,
+                    Configuration.GetSection("JWTConfig").GetSection("SECRET_KEY").Value,
+                    Convert.ToInt32(Configuration.GetSection("JWTConfig").GetSection("LIFETIME_IN_HRS").Value)
+                );
+                return new CitizenLoginCreds() { LoginSuccess = true, Token = token };
             }
-            return new CitizenLoginCreds() { loginSuccess = false };
+            return new CitizenLoginCreds() { LoginSuccess = false };
         }
     }
 }
