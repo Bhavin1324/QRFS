@@ -30,7 +30,6 @@ namespace QRFS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             #region Session configuration
@@ -84,9 +83,6 @@ namespace QRFS
             });
             #endregion
 
-            #region Cookie authentication
-            services.AddAuthentication().AddCookie("CookieAuth", options => options.Cookie.Name = "CookieAuth");
-            #endregion  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

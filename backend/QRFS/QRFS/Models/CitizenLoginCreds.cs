@@ -6,6 +6,7 @@ namespace QRFS.Models
     {
         public string CitizenEmail { get; set; }
         public bool? LoginSuccess{ get; set; }
+        public string? Otp { get; set; }
         public string? Token { get; set; }
     }
 }

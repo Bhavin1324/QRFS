@@ -29,10 +29,10 @@ function LoginCard(props: ILoginCardProps) {
     "POST",
     { citizenEmail: formValues.email }
   );
-  const varifyReq = useFetch(
+  const varifyReq = useFetch<ICitizenCred>(
     process.env.REACT_APP_BASE_URL + ApiKeysEnum.VARIFY_OTP,
     "POST",
-    { otp: formValues.otp.toString() }
+    { otp: formValues.otp.toString(), citizenEmail: formValues.email }
   );
 
   function Validate(values: {
@@ -40,7 +40,12 @@ function LoginCard(props: ILoginCardProps) {
     password?: string;
     otp?: string;
   }) {
-    const err: { email?: string; password?: string; otp?: string } = {};
+    const err: {
+      email?: string;
+      password?: string;
+      otp?: string;
+      validOtp?: string;
+    } = {};
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!values.email) {
       err.email = `Email is required`;
@@ -82,7 +87,6 @@ function LoginCard(props: ILoginCardProps) {
         const resp = await loginReq();
         setIsLoading(false);
         setResponse(resp);
-        console.log(resp);
       }
     } catch (ex) {
       setIsOtp(false);
@@ -102,10 +106,8 @@ function LoginCard(props: ILoginCardProps) {
     if (props.isOfficer) {
       console.log("officer login");
     } else {
-      console.log("ERROR: ", errors);
       if (Object.keys(errors).length === 0) {
         const result: ICitizenCred = await varifyReq();
-        console.log("Login success ", result.loginSuccess);
         if (result.token && result.loginSuccess) {
           setResponse({
             ...response,
@@ -115,8 +117,13 @@ function LoginCard(props: ILoginCardProps) {
           localStorage.setItem("token", result.token);
           navigate("/plane/fform");
         } else {
-          const err = Validate(formValues);
-          setFormValues({ ...formValues, errors: err });
+          setFormValues({
+            ...formValues,
+            errors: {
+              ...errors,
+              validOtp: "Entered OTP is invlaid for given email",
+            },
+          });
         }
       }
     }
@@ -186,16 +193,16 @@ function LoginCard(props: ILoginCardProps) {
                     type="number"
                     name="otp"
                     className={
-                      formValues.errors.otp
+                      formValues.errors.otp || formValues.errors.validOtp
                         ? "form-control invalid-control mb-1"
                         : "form-control mb-3"
                     }
                     value={formValues.otp}
                     onChange={changeHandler}
                   />
-                  {formValues.errors.otp && (
+                  {(formValues.errors.otp || formValues.errors.validOtp) && (
                     <div className="mb-3 text-red-600">
-                      {formValues.errors.otp}
+                      {formValues.errors.validOtp || formValues.errors.otp}
                     </div>
                   )}
                 </div>
