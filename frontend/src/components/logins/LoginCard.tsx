@@ -115,7 +115,7 @@ function LoginCard(props: ILoginCardProps) {
             token: result.token,
           });
           localStorage.setItem("token", result.token);
-          navigate("/plane/fform");
+          navigate("/fform");
         } else {
           setFormValues({
             ...formValues,

@@ -18,9 +18,9 @@ namespace QRFS.Helper
             SIGNIN_KEY = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var credentials = new SigningCredentials(SIGNIN_KEY, SecurityAlgorithms.HmacSha256);
             var header = new JwtHeader(credentials);
-            DateTime Expiry = DateTime.UtcNow.AddHours(Convert.ToInt32(expiryInHours));
-            int ts = (int)(Expiry - new DateTime(1970, 1, 1)).TotalSeconds;
-            payload.Add("exp", ts);
+            DateTime Expiry = DateTime.UtcNow.AddHours(expiryInHours);
+            long tms = (long)(Expiry - new DateTime(Expiry.Year, Expiry.Month, Expiry.Day)).TotalMilliseconds;
+            payload.Add("exp", tms);
             var securityToken = new JwtSecurityToken(header, payload);
             var handler = new JwtSecurityTokenHandler();
             var tokenString = handler.WriteToken(securityToken);

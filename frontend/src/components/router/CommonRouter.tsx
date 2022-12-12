@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FeedbackForm from "../feedbackForm/FeedbackForm";
 import NotFound from "../layout/NotFound";
-import SharedLayout from "../layout/SharedLayout";
+import ProtactedRoute from "../layout/ProtactedRoute";
 import Login from "../logins/Login";
 import LoginCard from "../logins/LoginCard";
 import ORegistration from "../logins/ORegistration";
@@ -15,7 +15,7 @@ function CommonRouter() {
             <Route index element={<LoginCard isOfficer={false} />} />
             <Route path="officer" element={<LoginCard isOfficer={true} />} />
           </Route>
-          <Route path="plane" element={<SharedLayout />}>
+          <Route element={<ProtactedRoute />}>
             <Route index path="fform" element={<FeedbackForm />} />
             <Route path="o-registration" element={<ORegistration />} />
           </Route>
