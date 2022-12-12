@@ -16,7 +16,7 @@ namespace QRFS.Models
 
         public string Id { get; set; }
         public string Text { get; set; }
-        public string TextGujarati { get; set; }
+        public string? TextGujarati { get; set; }
         public string QuestionId { get; set; }
 
         public virtual Questions Question { get; set; }

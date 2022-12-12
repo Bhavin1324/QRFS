@@ -50,10 +50,10 @@ namespace QRFS
             #region JWT service conf
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = "JwtBearer";
-                options.DefaultChallengeScheme = "JwtBearer";
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
             })
-            .AddJwtBearer("JwtBearer", options => 
+            .AddJwtBearer("Bearer", options => 
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
@@ -62,7 +62,7 @@ namespace QRFS
                     ValidateAudience= false,
                     ValidIssuer = "http://localhost:42100",
                     ValidAudience= "http://localhost:42100",
-                    ValidateLifetime= true,
+                    ValidateLifetime= false,
                 };
             });
             

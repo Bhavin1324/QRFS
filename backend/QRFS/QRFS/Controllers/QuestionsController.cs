@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,17 +22,18 @@ namespace QRFS.Controllers
         }
 
         // GET: api/Questions
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Questions>>> GetQuestions()
         {
-            return await _context.Questions.ToListAsync();
+            return await _context.Questions.Include(x => x.Options).ToListAsync();
         }
 
         // GET: api/Questions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Questions>> GetQuestions(string id)
         {
-            var questions = await _context.Questions.FindAsync(id);
+            var questions = await _context.Questions.Where(x => x.Id == id).Include(x => x.Options).FirstAsync();
 
             if (questions == null)
             {

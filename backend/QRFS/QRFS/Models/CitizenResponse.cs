@@ -12,10 +12,10 @@ namespace QRFS.Models
         public string Id { get; set; }
         public string QuestionId { get; set; }
         public string OptionId { get; set; }
-        public string LogId { get; set; }
+        public string? LogId { get; set; }
         public string StationId { get; set; }
 
-        public virtual FeedbackLog Log { get; set; }
+        public virtual FeedbackLog? Log { get; set; }
         public virtual Options Option { get; set; }
         public virtual Questions Question { get; set; }
         public virtual PoliceStation Station { get; set; }

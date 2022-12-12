@@ -7,7 +7,7 @@ export interface ICitizenResponse {
   id?: string;
   questionId: string;
   optionsId: string;
-  logId: string;
+  logId?: string;
   stationId: string;
   feedbackLog?: IFeedbackLog;
   options?: IOptions;

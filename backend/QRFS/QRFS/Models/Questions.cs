@@ -17,7 +17,7 @@ namespace QRFS.Models
 
         public string Id { get; set; }
         public string Text { get; set; }
-        public string TextGujarati { get; set; }
+        public string? TextGujarati { get; set; }
         public bool? IsDescriptive { get; set; }
 
         public virtual ICollection<CitizenResponse> CitizenResponse { get; set; }
