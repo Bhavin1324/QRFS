@@ -17,6 +17,7 @@ namespace QRFS.Models
         }
 
         public string Id { get; set; }
+        public string Name { get; set; }
         public string DistrictId { get; set; }
         public string SubDivisionId { get; set; }
         public string AreaId { get; set; }

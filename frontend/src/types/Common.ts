@@ -5,7 +5,7 @@ export interface IOTP {
 export interface ILoginForm {
   email: string;
   password?: string;
-  otp: string;
+  otp?: string;
   errors: {
     email?: string;
     password?: string;

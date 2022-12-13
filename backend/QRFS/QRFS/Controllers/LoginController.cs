@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using QRFS.Helper;
 using QRFS.Models;
@@ -14,17 +15,28 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+
+
 namespace QRFS.Controllers
 {
+    public class CommonLoginCred
+    {
+        public string EmailOrUsername { get; set; }
+        public string Password { get; set; }
+        public bool? isSuccess { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
+        private readonly QRFeedbackDBContext _context;
         private IEmailService _emailService;
         private IConfiguration Configuration { get; }
         private static Dictionary<string, int> _authInfo = new Dictionary<string, int>();
-        public LoginController(IEmailService emailService, IConfiguration configuration)
+        public LoginController(IEmailService emailService, IConfiguration configuration, QRFeedbackDBContext context)
         {
+            _context = context;
             _emailService = emailService;
             Configuration = configuration;
         }
@@ -80,6 +92,26 @@ namespace QRFS.Controllers
             catch
             {
                 return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("~/api/login/officer")]
+        public async Task<ActionResult<CommonLoginCred>> OfficerLogin(CommonLoginCred user)
+        {
+            try
+            {
+                var dbUser = await _context.PoliceOfficer.Where(x => x.OfficerEmail == user.EmailOrUsername).FirstOrDefaultAsync();
+                if(dbUser != null && EncDecHelper.Decrypt(Configuration["PassConfig:PASS_KEY"], dbUser.OfficerPassword) == user.Password)
+                {
+                    return new CommonLoginCred() { isSuccess = true };
+                }
+                return new CommonLoginCred() { isSuccess=false };
+            }
+            catch 
+            {
+                return new CommonLoginCred() { isSuccess = false };
             }
         }
     }

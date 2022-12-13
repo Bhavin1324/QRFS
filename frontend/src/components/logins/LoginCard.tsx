@@ -32,7 +32,7 @@ function LoginCard(props: ILoginCardProps) {
   const varifyReq = useFetch<ICitizenCred>(
     process.env.REACT_APP_BASE_URL + ApiKeysEnum.VARIFY_OTP,
     "POST",
-    { otp: formValues.otp.toString(), citizenEmail: formValues.email }
+    { otp: formValues.otp?.toString() || "", citizenEmail: formValues.email }
   );
 
   function Validate(values: {

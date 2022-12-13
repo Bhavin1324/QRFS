@@ -77,27 +77,29 @@ namespace QRFS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<CitizenResponse>> PostCitizenResponse(CitizenResponse citizenResponse)
+        public async Task<ActionResult> PostCitizenResponse(List<CitizenResponse> citizenResponses)
         {
-            citizenResponse.Id = Guid.NewGuid().ToString();
-            _context.CitizenResponse.Add(citizenResponse);
-            try
+            foreach(var response in citizenResponses)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (CitizenResponseExists(citizenResponse.Id))
+                response.Id = Guid.NewGuid().ToString();
+                _context.CitizenResponse.Add(response);
+                try
                 {
-                    return Conflict();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateException)
                 {
-                    throw;
+                    if (CitizenResponseExists(response.Id))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
-
-            return CreatedAtAction("GetCitizenResponse", new { id = citizenResponse.Id }, citizenResponse);
+            return Ok();
         }
 
         // DELETE: api/CitizenResponses/5

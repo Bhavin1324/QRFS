@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using QRFS.Helper;
 using QRFS.Models;
 
 namespace QRFS.Controllers
@@ -14,10 +16,12 @@ namespace QRFS.Controllers
     public class PoliceOfficersController : ControllerBase
     {
         private readonly QRFeedbackDBContext _context;
+        private IConfiguration Configuration { get; }
 
-        public PoliceOfficersController(QRFeedbackDBContext context)
+        public PoliceOfficersController(QRFeedbackDBContext context, IConfiguration configuration)
         {
             _context = context;
+            Configuration= configuration;
         }
 
         // GET: api/PoliceOfficers
@@ -81,6 +85,7 @@ namespace QRFS.Controllers
         public async Task<ActionResult<PoliceOfficer>> PostPoliceOfficer(PoliceOfficer policeOfficer)
         {
             policeOfficer.Id = Guid.NewGuid().ToString();
+            policeOfficer.OfficerPassword = EncDecHelper.Encrypt(Configuration["PassConfig:PASS_KEY"], policeOfficer.OfficerPassword);
             _context.PoliceOfficer.Add(policeOfficer);
             try
             {

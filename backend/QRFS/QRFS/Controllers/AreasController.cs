@@ -24,14 +24,14 @@ namespace QRFS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Area>>> GetArea()
         {
-            return await _context.Area.ToListAsync();
+            return await _context.Area.Include(x => x.PoliceStation).ToListAsync();
         }
 
         // GET: api/Areas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Area>> GetArea(string id)
         {
-            var area = await _context.Area.FindAsync(id);
+            var area = await _context.Area.Where(x => x.Id == id).Include(x => x.PoliceStation).FirstAsync();
 
             if (area == null)
             {
