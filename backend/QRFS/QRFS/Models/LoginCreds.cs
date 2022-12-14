@@ -2,9 +2,10 @@
 
 namespace QRFS.Models
 {
-    public class CitizenLoginCreds
+    public class LoginCreds
     {
-        public string CitizenEmail { get; set; }
+        public string Email { get; set; }
+        public string? Password{ get; set; }
         public bool? LoginSuccess{ get; set; }
         public string? Otp { get; set; }
         public string? Token { get; set; }

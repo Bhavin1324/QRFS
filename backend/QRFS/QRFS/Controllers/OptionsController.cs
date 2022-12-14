@@ -24,14 +24,14 @@ namespace QRFS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Options>>> GetOptions()
         {
-            return await _context.Options.Include(x => x.Question).ToListAsync();
+            return await _context.Options.ToListAsync();
         }
 
         // GET: api/Options/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Options>> GetOptions(string id)
         {
-            var options = await _context.Options.Where(x => x.Id == id).Include(x => x.Question).FirstAsync();
+            var options = await _context.Options.FindAsync(id);
 
             if (options == null)
             {

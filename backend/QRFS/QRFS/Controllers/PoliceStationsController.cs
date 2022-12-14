@@ -24,14 +24,14 @@ namespace QRFS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PoliceStation>>> GetPoliceStation()
         {
-            return await _context.PoliceStation.Include(x => x.SubDivision).Include(x => x.Area).Include(x => x.District).ToListAsync();
+            return await _context.PoliceStation.ToListAsync();
         }
 
         // GET: api/PoliceStations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PoliceStation>> GetPoliceStation(string id)
         {
-            var policeStation = await _context.PoliceStation.Where(station => station.Id == id).Include(x => x.SubDivision).Include(x => x.Area).Include(x => x.District).FirstAsync();
+            var policeStation = await _context.PoliceStation.FindAsync(id);
 
             if (policeStation == null)
             {

@@ -7,7 +7,7 @@ export interface IPoliceStation {
   districtId: string;
   subDivisionId: string;
   areaId: string;
-  area?: IArea;
-  district?: IDistrict;
-  subDivision?: ISubDivision;
+  area?: IArea[];
+  district?: IDistrict[];
+  subDivision?: ISubDivision[];
 }

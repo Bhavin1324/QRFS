@@ -1,13 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
 import { ICitizenResponse } from "../../types/CitizenResponse";
-import { ApiKeysEnum } from "../../types/enums";
+import { ApiKeysEnum, NavigateToRoute } from "../../types/enums";
 import { IOptions } from "../../types/Options";
 import { IQuestion } from "../../types/Questions";
-import ServerAlert from "../designed/ServerAlert";
+import { TokenValidation } from "../../Utils/Common";
+import ServerAlert from "../CustomElement/ServerAlert";
 
 function FeedbackForm() {
+  const tokenValid = TokenValidation();
+  const navigate = useNavigate();
   const [formValue, setFormValues] = useState<ICitizenResponse>();
   const [loading, setLoading] = useState<boolean>(true);
   const [response, setResponse] = useState<IQuestion[]>([]);
@@ -34,9 +38,9 @@ function FeedbackForm() {
 
   function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {}
 
-  console.log(response);
   return (
     <div className="container mt-4">
+      {tokenValid.type !== "CLIENT" && <Navigate to={NavigateToRoute.HOME} />}
       {loading && (
         <div className="text-center mt-5">
           <div className="spinner-grow" role="status">
@@ -49,7 +53,18 @@ function FeedbackForm() {
       )}
       {response.length > 0 && (
         <div className="row">
-          <div className="fs-2 my-2">Provide your feedback</div>
+          <div className="fs-2 my-2 col-md-6">Provide your feedback </div>
+          <div className="col-md-6 text-right">
+            <button
+              className="btn btn-dark my-2 mr-2"
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate(NavigateToRoute.HOME);
+              }}
+            >
+              Logout
+            </button>{" "}
+          </div>
           <div className="col-xs-12">
             <form className="pb-6">
               {response.map((item: IQuestion, index: number) => {

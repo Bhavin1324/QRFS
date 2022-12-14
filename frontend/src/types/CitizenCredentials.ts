@@ -1,5 +1,6 @@
-export interface ICitizenCred {
-  citizenEmail: string;
+export interface ILoginCredential {
+  email: string;
+  password?: string;
   loginSuccess?: boolean;
   token?: string;
   otp?: string;
