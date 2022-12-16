@@ -8,7 +8,9 @@ import ORegistration from "../logins/ORegistration";
 import Dashboard from "../dashboard/Dashboard";
 import { NavigateToRoute } from "../../types/enums";
 import PoliceStations from "../dashboard/PoliceStation/PoliceStations";
-import QRGenerator from "../dashboard/QRGenerator";
+import SinglePoliceStation from "../dashboard/PoliceStation/SinglePoliceStation";
+import Configuration from "../dashboard/PoliceConfig/Configuration";
+import AddPoliceStation from "../dashboard/PoliceStation/AddPoliceStation";
 
 function CommonRouter() {
   return (
@@ -18,12 +20,16 @@ function CommonRouter() {
           <Route path="/" element={<Login />}>
             <Route index element={<LoginCard isOfficer={false} />} />
             <Route
+              path={NavigateToRoute.HOME + "/:id"}
+              element={<LoginCard isOfficer={false} />}
+            />
+            <Route
               path={NavigateToRoute.OFFICER}
               element={<LoginCard isOfficer={true} />}
             />
           </Route>
           <Route
-            path={NavigateToRoute.OFFICER_REGISTRATION}
+            path={`${NavigateToRoute.OFFICER}/${NavigateToRoute.OFFICER_REGISTRATION}`}
             element={<ORegistration />}
           />
           <Route element={<ProtactedRoute />}>
@@ -37,8 +43,17 @@ function CommonRouter() {
                 element={<PoliceStations />}
               />
               <Route
-                path={NavigateToRoute.QR_GENERATER}
-                element={<QRGenerator />}
+                path={NavigateToRoute.POLICE_STATIONS + "/:id"}
+                element={<SinglePoliceStation />}
+              />
+              <Route
+                path={NavigateToRoute.CONFIG}
+                element={<Configuration />}
+              />
+
+              <Route
+                path={NavigateToRoute.ADD_PS}
+                element={<AddPoliceStation />}
               />
             </Route>
           </Route>

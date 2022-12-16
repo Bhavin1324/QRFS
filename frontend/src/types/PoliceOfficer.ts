@@ -3,7 +3,7 @@ export interface IPoliceOfficer {
   id?: string;
   name: string;
   officerEmail: string;
-  password: string;
+  officerPassword: string;
   stationId: string;
   policeStation?: IPoliceStation;
 }

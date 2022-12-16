@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { NavigateToRoute } from "../../types/enums";
 import { TokenValidation } from "../../Utils/Common";
@@ -51,20 +51,26 @@ function Navbar() {
             Police stations
           </Link>
         </li>
-        <li className="nav-list-items">
-          {role.type === "ADMIN" && (
-            <Link className="link-a" to={NavigateToRoute.QR_GENERATER}>
-              Generate QR
-            </Link>
-          )}
-        </li>
+        {role.type === "ADMIN" && (
+          <>
+            <li className="nav-list-items">
+              <Link className="link-a" to={NavigateToRoute.CONFIG}>
+                Configuration
+              </Link>
+            </li>
+          </>
+        )}
         <li className="md:hidden">
           <button className="btn btn-light my-3" onClick={logOut}>
             Logout
           </button>
         </li>
       </ul>
-      <div className="hidden md:block">
+      <div className="hidden md:flex">
+        {/* Hardcoded for now */}
+        <div className="self-center mx-2 font-semibold">
+          {localStorage.getItem("user")}
+        </div>
         <button className="btn btn-outline-light" onClick={logOut}>
           Logout
         </button>

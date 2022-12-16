@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +25,15 @@ namespace QRFS.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PoliceStation>>> GetPoliceStation()
         {
-            return await _context.PoliceStation.ToListAsync();
+            return await _context.PoliceStation.Include(x => x.Area).Include(x => x.SubDivision).Include(x => x.District).ToListAsync();
         }
 
         // GET: api/PoliceStations/5
         [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<PoliceStation>> GetPoliceStation(string id)
         {
-            var policeStation = await _context.PoliceStation.FindAsync(id);
+            var policeStation = await _context.PoliceStation.Where(x => x.Id == id).Include(x => x.Area).Include(x => x.SubDivision).Include(x => x.District).FirstAsync();
 
             if (policeStation == null)
             {
@@ -44,8 +46,8 @@ namespace QRFS.Controllers
         // PUT: api/PoliceStations/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPoliceStation(string id, PoliceStation policeStation)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchPoliceStation(string id, PoliceStation policeStation)
         {
             policeStation.Id = id;
             if (id != policeStation.Id)

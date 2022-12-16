@@ -612,9 +612,22 @@ video {
   margin-bottom: 0.75rem;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
 }
 
 .mt-4 {
@@ -649,6 +662,22 @@ video {
   margin-left: auto;
 }
 
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -657,8 +686,24 @@ video {
   display: flex;
 }
 
+.table {
+  display: table;
+}
+
 .hidden {
   display: none;
+}
+
+.h-40 {
+  height: 10rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .resize {
@@ -673,8 +718,17 @@ video {
   gap: 0.5rem;
 }
 
+.gap-4 {
+  gap: 1rem;
+}
+
 .self-center {
   align-self: center;
+}
+
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 .px-2 {
@@ -820,6 +874,8 @@ video {
 .btn-teal:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(17 94 89 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .btn-teal:focus {
@@ -942,6 +998,10 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.btn-close{
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
 }
 
 /* Navbar */
@@ -1089,35 +1149,13 @@ video {
   opacity: 0;
 }
 
-/* .branding{
-    @apply flex justify-center align-middle ml-8
-}
-.branding span{
-    @apply text-lg ml-3
-}
-.branding p{
-    @apply ml-4 
-    
-}
-.nav-list{
-    @apply flex flex-wrap justify-center align-middle mx-8
-}
-.nav-items{
-    @apply mx-4 hover:bg-teal-200 md:my-[6px] md:py-2 md:px-[6px]
-} */
-
-/* 
-.hamburger{
-    @apply flex flex-col w-[40px] h-[40px] rounded-md self-center align-bottom justify-center ml-auto mr-7 md:hidden
-}
-.slice{
-    @apply outline-none border-white w-10/12 my-4 transition-all duration-300 ease-in
-}
- */
-
 @media (min-width: 768px) {
-  .md\:block {
-    display: block;
+  .md\:mb-0 {
+    margin-bottom: 0px;
+  }
+
+  .md\:flex {
+    display: flex;
   }
 
   .md\:hidden {

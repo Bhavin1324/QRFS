@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -17,10 +18,12 @@ namespace QRFS.Models
         }
 
         public string Id { get; set; }
+        [Required(ErrorMessage = "Police station name is required")]
         public string Name { get; set; }
         public string DistrictId { get; set; }
         public string SubDivisionId { get; set; }
         public string AreaId { get; set; }
+        public string? QrUrl { get; set; }  
 
         public virtual Area Area { get; set; }
         public virtual District District { get; set; }

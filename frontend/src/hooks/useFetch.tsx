@@ -7,9 +7,9 @@ export function useFetch<T>(
   token?: string
 ) {
   method = method || "GET";
-  async function MakeHttpRequest() {
+  async function MakeHttpRequest(id?: string) {
     const response = await fetch(
-      url,
+      id ? url + id : url,
       method !== "GET"
         ? {
             method: method,
@@ -29,6 +29,9 @@ export function useFetch<T>(
           }
         : {}
     );
+    if (method === "PATCH" || method === "PUT") {
+      return;
+    }
     const result = await response.json();
     return result;
   }

@@ -14,7 +14,7 @@
     @apply transition-all duration-200 ease-out border-teal-700 text-teal-700 border-[1px] px-4 py-[6px] rounded-lg hover:bg-teal-700 hover:border-teal-700 hover:text-white focus:bg-teal-700 focus:border-teal-700 focus:text-white
 }
 .btn-teal{
-    @apply transition-all duration-200 ease-out cursor-pointer bg-teal-700 text-white px-4 py-[6px] rounded-lg hover:bg-teal-800 focus:bg-teal-800
+    @apply transition-all duration-200 ease-out cursor-pointer bg-teal-700 text-white px-4 py-[6px] rounded-lg hover:bg-teal-800 focus:bg-teal-800 hover:text-white
 }
 .form-control{
     @apply border-teal-600 focus:border-teal-600 focus:shadow-[0_0_0_.25rem_rgba(15,118,110,0.25);]
@@ -40,6 +40,9 @@
 
 .form-check-input {
     @apply checked:bg-teal-700 focus:border-2 checked:border-teal-800 focus:border-teal-800 focus:outline-none focus:shadow-[0_0_0_.25rem_rgba(15,118,110,0.25)]
+}
+.btn-close{
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
 }
 
 /* Navbar */
@@ -77,27 +80,3 @@
 .ham-active .slice:nth-child(2){
     @apply translate-x-2 opacity-0
 }
-/* .branding{
-    @apply flex justify-center align-middle ml-8
-}
-.branding span{
-    @apply text-lg ml-3
-}
-.branding p{
-    @apply ml-4 
-    
-}
-.nav-list{
-    @apply flex flex-wrap justify-center align-middle mx-8
-}
-.nav-items{
-    @apply mx-4 hover:bg-teal-200 md:my-[6px] md:py-2 md:px-[6px]
-} */
-/* 
-.hamburger{
-    @apply flex flex-col w-[40px] h-[40px] rounded-md self-center align-bottom justify-center ml-auto mr-7 md:hidden
-}
-.slice{
-    @apply outline-none border-white w-10/12 my-4 transition-all duration-300 ease-in
-}
- */

@@ -13,7 +13,7 @@ function Dashboard() {
       )}
       <div>
         <Navbar />
-        <div className="container mt-4">
+        <div className="container mt-3 px-3">
           <Outlet />
         </div>
       </div>

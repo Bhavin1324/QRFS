@@ -124,6 +124,7 @@ function LoginCard(props: ILoginCardProps) {
               token: result.token,
             });
             localStorage.setItem("token", result.token);
+            localStorage.setItem("user", formValues.email);
             navigate(`/${NavigateToRoute.DASHBOARD}`);
           } else {
             setFormValues({

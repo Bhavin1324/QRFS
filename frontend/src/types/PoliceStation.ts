@@ -4,10 +4,12 @@ import { ISubDivision } from "./SubdDivision";
 
 export interface IPoliceStation {
   id?: string;
+  name: string;
   districtId: string;
   subDivisionId: string;
   areaId: string;
-  area?: IArea[];
-  district?: IDistrict[];
-  subDivision?: ISubDivision[];
+  qrUrl?: string;
+  area?: IArea;
+  district?: IDistrict;
+  subDivision?: ISubDivision;
 }

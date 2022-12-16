@@ -3,6 +3,11 @@ export enum ApiKeysEnum {
   VARIFY_OTP = "api/varify",
   QUESTIONS_LIST = "api/questions",
   LOGIN_OFFICER = "api/login/officer",
+  REG_OFFICER = "api/policeofficers",
+  POLICE_STATIONS = "api/policestations",
+  AREAS = "api/areas",
+  DISTRICTS = "api/districts",
+  SUB_DIVISION = "api/subdivisions",
 }
 
 export enum NavigateToRoute {
@@ -13,4 +18,6 @@ export enum NavigateToRoute {
   DASHBOARD = "dashboard",
   POLICE_STATIONS = "stations",
   QR_GENERATER = "qrgen",
+  CONFIG = "configuration",
+  ADD_PS = "add",
 }
