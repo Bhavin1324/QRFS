@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useFetch } from "../../../hooks/useFetch";
 import { ApiKeysEnum, NavigateToRoute } from "../../../types/enums";
@@ -11,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import FilterStaions from "./FilterStaions";
 
 const thisLocation: IBreadCrumbProps = {
   paths: [
@@ -77,7 +79,13 @@ export default function PoliceStations() {
   useEffect(() => {
     GetInitialData();
   }, [selectedStation]);
-
+  function onFilter(dataList: IPoliceStation[]) {
+    if (dataList.length > 0) {
+      setPoliceStations(dataList);
+    } else {
+      GetInitialData();
+    }
+  }
   /* const GenerateQR = async (id: string) => {
     console.log("selected item", selectedStation);
     try {
@@ -115,6 +123,9 @@ export default function PoliceStations() {
         {!isLoading && policeStations.length === 0 && (
           <ServerAlert message="Unable to reach the server" />
         )}
+        <div className="stripe-card">
+          <FilterStaions data={policeStations} onFilter={onFilter} />
+        </div>
         {policeStations.length > 0 && (
           <table className="table">
             <thead>

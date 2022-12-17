@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useFetch } from "../../../hooks/useFetch";
 import { IArea } from "../../../types/Area";
