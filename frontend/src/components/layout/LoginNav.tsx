@@ -1,14 +1,16 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
+import { NavigateToRoute } from "../../types/enums";
 
 function LoginNav() {
+  const { id } = useParams();
   return (
     <ul className="nav gap-2">
       <li className="nav-item">
         <NavLink
           className={({ isActive }) =>
-            isActive ? "nav-link nav-active" : "nav-link"
+            isActive || id ? "nav-link nav-active" : "nav-link"
           }
-          to="/"
+          to={id ? `/${NavigateToRoute.HOME}/${id}` : `${NavigateToRoute.HOME}`}
         >
           Citizen
         </NavLink>
@@ -18,7 +20,7 @@ function LoginNav() {
           className={({ isActive }) =>
             isActive ? "nav-link nav-active" : "nav-link"
           }
-          to="/officer"
+          to={"/" + NavigateToRoute.OFFICER}
         >
           Officer
         </NavLink>

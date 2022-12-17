@@ -54,7 +54,10 @@ function Navbar() {
         {role.type === "ADMIN" && (
           <>
             <li className="nav-list-items">
-              <Link className="link-a" to={NavigateToRoute.CONFIG}>
+              <Link
+                className="link-a"
+                to={`${NavigateToRoute.CONFIG}/${NavigateToRoute.AREA}`}
+              >
                 Configuration
               </Link>
             </li>

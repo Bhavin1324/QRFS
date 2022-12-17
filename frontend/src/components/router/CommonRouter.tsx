@@ -11,6 +11,7 @@ import PoliceStations from "../dashboard/PoliceStation/PoliceStations";
 import SinglePoliceStation from "../dashboard/PoliceStation/SinglePoliceStation";
 import Configuration from "../dashboard/PoliceConfig/Configuration";
 import AddPoliceStation from "../dashboard/PoliceStation/AddPoliceStation";
+import ConfigCockpit from "../dashboard/PoliceConfig/ConfigCockpit";
 
 function CommonRouter() {
   return (
@@ -46,10 +47,20 @@ function CommonRouter() {
                 path={NavigateToRoute.POLICE_STATIONS + "/:id"}
                 element={<SinglePoliceStation />}
               />
-              <Route
-                path={NavigateToRoute.CONFIG}
-                element={<Configuration />}
-              />
+              <Route path={NavigateToRoute.CONFIG} element={<Configuration />}>
+                <Route
+                  path={NavigateToRoute.AREA}
+                  element={<ConfigCockpit type="AREA" />}
+                />
+                <Route
+                  path={NavigateToRoute.DIV}
+                  element={<ConfigCockpit type="DIV" />}
+                />
+                <Route
+                  path={NavigateToRoute.DISTRICT}
+                  element={<ConfigCockpit type="DISTRICT" />}
+                />
+              </Route>
 
               <Route
                 path={NavigateToRoute.ADD_PS}

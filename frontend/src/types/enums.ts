@@ -20,4 +20,7 @@ export enum NavigateToRoute {
   QR_GENERATER = "qrgen",
   CONFIG = "configuration",
   ADD_PS = "add",
+  AREA = "area",
+  DIV = "division",
+  DISTRICT = "district",
 }
