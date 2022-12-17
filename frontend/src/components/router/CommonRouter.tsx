@@ -12,6 +12,7 @@ import SinglePoliceStation from "../dashboard/PoliceStation/SinglePoliceStation"
 import Configuration from "../dashboard/PoliceConfig/Configuration";
 import AddPoliceStation from "../dashboard/PoliceStation/AddPoliceStation";
 import ConfigCockpit from "../dashboard/PoliceConfig/ConfigCockpit";
+import Profile from "../dashboard/Profile";
 
 function CommonRouter() {
   return (
@@ -61,7 +62,7 @@ function CommonRouter() {
                   element={<ConfigCockpit type="DISTRICT" />}
                 />
               </Route>
-
+              <Route path={NavigateToRoute.PROFILE} element={<Profile />} />
               <Route
                 path={NavigateToRoute.ADD_PS}
                 element={<AddPoliceStation />}

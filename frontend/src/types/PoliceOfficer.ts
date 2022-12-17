@@ -5,5 +5,5 @@ export interface IPoliceOfficer {
   officerEmail: string;
   officerPassword: string;
   stationId: string;
-  policeStation?: IPoliceStation;
+  station?: IPoliceStation;
 }

@@ -63,6 +63,15 @@ function Navbar() {
             </li>
           </>
         )}
+        {role.type === "MASTER" && (
+          <>
+            <li className="nav-list-items">
+              <Link className="link-a" to={`${NavigateToRoute.PROFILE}`}>
+                Profile
+              </Link>
+            </li>
+          </>
+        )}
         <li className="md:hidden">
           <button className="btn btn-light my-3" onClick={logOut}>
             Logout

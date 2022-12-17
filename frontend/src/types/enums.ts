@@ -8,6 +8,7 @@ export enum ApiKeysEnum {
   AREAS = "api/areas",
   DISTRICTS = "api/districts",
   SUB_DIVISION = "api/subdivisions",
+  CURRENT_USER = "api/loggedin",
 }
 
 export enum NavigateToRoute {
@@ -23,4 +24,5 @@ export enum NavigateToRoute {
   AREA = "area",
   DIV = "division",
   DISTRICT = "district",
+  PROFILE = "profile",
 }

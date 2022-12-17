@@ -113,6 +113,12 @@ export default function PoliceStations() {
             </Link>
           )}
         </div>
+        {!isLoading && policeStations.length === 0 && (
+          <ServerAlert message="Unable to reach the server" />
+        )}
+        <div className="stripe-card">
+          <FilterStaions data={policeStations} onFilter={onFilter} />
+        </div>
         {isLoading && (
           <div className="text-center mt-5">
             <div className="spinner-grow" role="status">
@@ -120,12 +126,6 @@ export default function PoliceStations() {
             </div>
           </div>
         )}
-        {!isLoading && policeStations.length === 0 && (
-          <ServerAlert message="Unable to reach the server" />
-        )}
-        <div className="stripe-card">
-          <FilterStaions data={policeStations} onFilter={onFilter} />
-        </div>
         {policeStations.length > 0 && (
           <table className="table">
             <thead>

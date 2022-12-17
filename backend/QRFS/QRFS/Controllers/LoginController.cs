@@ -19,6 +19,16 @@ using System.Threading.Tasks;
 
 namespace QRFS.Controllers
 {
+    public class ActivatedUser
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string qrUrl { get; set; }
+        public string StationName { get; set; }
+        public string StationArea { get; set; }
+        public string StationSubDivision { get; set; }
+        public string StationDistrict { get; set; }
+    }
     public enum UserType
     {
         MASTER,
@@ -138,6 +148,22 @@ namespace QRFS.Controllers
             {
                 return new LoginCreds() { LoginSuccess = false };
             }
+        }
+        [HttpPost]
+        [Authorize(AuthenticationSchemes ="Bearer")]
+        [Route("~/api/loggedin")]
+        public async Task<ActionResult<ActivatedUser>> GetOfficerByEmail(LoginCreds user)
+        {
+            var officer = await _context.PoliceOfficer.Where(x => x.OfficerEmail.Equals(user.Email)).Include(x => x.Station).FirstAsync();
+            var station = await _context.PoliceStation.Where(x => x.Id == officer.StationId).FirstAsync();
+            var area = await _context.Area.Where(x => x.Id == station.AreaId).FirstAsync();
+            var subDiv = await _context.SubDivision.Where(x => x.Id == station.SubDivisionId).FirstAsync();
+            var dist = await _context.District.Where(x => x.Id == station.DistrictId).FirstAsync();
+            if(user == null)
+            {
+                return NotFound();
+            }
+            return new ActivatedUser() { Name = officer.Name, qrUrl=station.QrUrl, Email = officer.OfficerEmail, StationName = station.Name, StationArea = area.Name,StationSubDivision = subDiv.Name, StationDistrict = dist.Name};
         }
     }
 }
