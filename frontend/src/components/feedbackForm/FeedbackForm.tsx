@@ -1,42 +1,127 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { formControlClasses } from "@mui/material";
+import { stringify } from "querystring";
 import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { useFetch } from "../../hooks/useFetch";
 import { ICitizenResponse } from "../../types/CitizenResponse";
 import { ApiKeysEnum, NavigateToRoute } from "../../types/enums";
 import { IOptions } from "../../types/Options";
 import { IQuestion } from "../../types/Questions";
-import { TokenValidation } from "../../Utils/Common";
+import { convertToDashedDate, TokenValidation } from "../../Utils/Common";
 import ServerAlert from "../CustomElement/ServerAlert";
+import WarningAlert from "../CustomElement/WarningAlert";
+
+interface Iformtype {
+  questionId: string;
+  optionId: string;
+}
 
 function FeedbackForm() {
   const tokenValid = TokenValidation();
   const navigate = useNavigate();
-  const [formValue, setFormValues] = useState<ICitizenResponse>();
+
+  const [formValues, setFormValues] = useState<Iformtype[]>([]);
+  const [formErrors, setFormErrors] = useState<{ msg?: string }>({});
+  const [postResponse, setPostResponse] = useState<ICitizenResponse[]>([]);
+
   const [loading, setLoading] = useState<boolean>(true);
-  const [response, setResponse] = useState<IQuestion[]>([]);
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
   const getQuestions = useFetch<IQuestion>(
     process.env.REACT_APP_BASE_URL + ApiKeysEnum.QUESTIONS_LIST,
     "GET",
     { text: "" },
     localStorage.getItem("token") || ""
   );
+  const ReqPostResponse = useFetch<ICitizenResponse[]>(
+    process.env.REACT_APP_BASE_URL + ApiKeysEnum.CITIZEN_RESPONSE,
+    "POST",
+    postResponse
+  );
 
   const GetQuestions = async () => {
     try {
       const resp = await getQuestions();
-      setResponse(resp);
+      setQuestions(resp);
       setLoading(false);
     } catch (ex) {
       setLoading(false);
     }
   };
 
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues((previousValue: Iformtype[]) => {
+      let tmp = [];
+      for (let item of previousValue) {
+        if (item.questionId !== name) {
+          tmp.push(item);
+        }
+      }
+      tmp.push({
+        questionId: name,
+        optionId: value,
+      });
+      return tmp;
+    });
+  };
+
+  function constructResponse() {
+    let respArr: ICitizenResponse[] = [];
+    for (let item of formValues) {
+      respArr.push({
+        ...item,
+        stationId: localStorage.getItem("psid") || "",
+        responseDate: convertToDashedDate(new Date().toLocaleDateString()),
+      });
+    }
+    return respArr;
+  }
+
+  function Validate(values: any) {
+    const err: { msg?: string } = {};
+    if (Object.keys(values).length < 7) {
+      err.msg = "All answers are required";
+    }
+    return err;
+  }
+
+  async function handleSubmit(
+    e:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLButtonElement>
+  ) {
+    try {
+      e.preventDefault();
+      const err = Validate(formValues);
+      setFormErrors(err);
+      if (Object.keys(err).length === 0) {
+        const result: { isSuccess: boolean; message?: string } =
+          await ReqPostResponse();
+        if (result.isSuccess) {
+          Swal.fire(
+            "Success!",
+            "Response has been recorded successully!",
+            "success"
+          );
+          localStorage.removeItem("token");
+          navigate(`${NavigateToRoute.HOME}${localStorage.getItem("psid")}`);
+        }
+      }
+    } catch (ex) {
+      console.error("Excepiton occured while submitting the response", ex);
+    }
+  }
+
   useEffect(() => {
     GetQuestions();
   }, []);
 
-  function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {}
+  useEffect(() => {
+    const data = constructResponse();
+    setPostResponse(data);
+  }, [formValues]);
 
   return (
     <div className="container mt-4">
@@ -48,10 +133,10 @@ function FeedbackForm() {
           </div>
         </div>
       )}
-      {!loading && response.length === 0 && (
-        <ServerAlert message="Oops! Cannot find questions." />
+      {!loading && questions.length === 0 && (
+        <ServerAlert message="Unable to fetch questions from the server." />
       )}
-      {response.length > 0 && (
+      {questions.length > 0 && (
         <div className="row">
           <div className="fs-2 my-2 col-md-6">Provide your feedback </div>
           <div className="col-md-6 text-right">
@@ -59,6 +144,7 @@ function FeedbackForm() {
               className="btn btn-dark my-2 mr-2"
               onClick={() => {
                 localStorage.removeItem("token");
+                localStorage.removeItem("psid");
                 navigate(NavigateToRoute.HOME);
               }}
             >
@@ -67,7 +153,7 @@ function FeedbackForm() {
           </div>
           <div className="col-xs-12">
             <form className="pb-6">
-              {response.map((item: IQuestion, index: number) => {
+              {questions.map((item: IQuestion, index: number) => {
                 return (
                   <div className="form-group stripe-card text-lg" key={item.id}>
                     <div className="mb-2">
@@ -83,7 +169,7 @@ function FeedbackForm() {
                               type="radio"
                               id={option.id}
                               name={option.questionId}
-                              value={option.text}
+                              value={option.id}
                               onChange={changeHandler}
                             />
                             <label
@@ -110,8 +196,14 @@ function FeedbackForm() {
                   </div>
                 );
               })}
+              {formErrors.msg && <WarningAlert message={formErrors.msg} />}
+
               <div className="d-grid gap-2 col-6 mx-auto">
-                <button className="btn-teal" type="button">
+                <button
+                  className="btn-teal"
+                  type="button"
+                  onClick={handleSubmit}
+                >
                   Submit response
                 </button>
               </div>

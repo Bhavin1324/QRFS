@@ -14,6 +14,7 @@ namespace QRFS.Models
         public string OptionId { get; set; }
         public string? LogId { get; set; }
         public string StationId { get; set; }
+        public string ResponseDate { get; set; }
 
         public virtual FeedbackLog? Log { get; set; }
         public virtual Options Option { get; set; }

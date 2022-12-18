@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { ILoginCredential } from "../../types/CitizenCredentials";
 import { ILoginForm } from "../../types/Common";
 import { ApiKeysEnum, NavigateToRoute } from "../../types/enums";
@@ -14,6 +14,7 @@ interface ILoginCardProps {
 }
 
 function LoginCard(props: ILoginCardProps) {
+  const { id } = useParams();
   const tokenValid = TokenValidation();
   const navigate = useNavigate();
   const initalFormState: ILoginForm = {
@@ -146,6 +147,7 @@ function LoginCard(props: ILoginCardProps) {
               token: result.token,
             });
             localStorage.setItem("token", result.token);
+            localStorage.setItem("psid", id || "");
             navigate(`/${NavigateToRoute.FEEDBACK_FORM}`);
           } else {
             setFormValues({

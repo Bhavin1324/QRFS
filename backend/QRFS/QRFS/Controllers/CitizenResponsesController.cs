@@ -9,6 +9,11 @@ using QRFS.Models;
 
 namespace QRFS.Controllers
 {
+    public class CommonResponse
+    {
+        public bool IsSuccess { get; set; }
+        public string? Message { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     public class CitizenResponsesController : ControllerBase
@@ -77,7 +82,7 @@ namespace QRFS.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult> PostCitizenResponse(List<CitizenResponse> citizenResponses)
+        public async Task<ActionResult<CommonResponse>> PostCitizenResponse(List<CitizenResponse> citizenResponses)
         {
             foreach(var response in citizenResponses)
             {
@@ -91,7 +96,7 @@ namespace QRFS.Controllers
                 {
                     if (CitizenResponseExists(response.Id))
                     {
-                        return Conflict();
+                        return new CommonResponse() { IsSuccess= false, Message = "Similar id found. Primary key violated"};
                     }
                     else
                     {
@@ -99,7 +104,7 @@ namespace QRFS.Controllers
                     }
                 }
             }
-            return Ok();
+            return new CommonResponse() { IsSuccess = true };
         }
 
         // DELETE: api/CitizenResponses/5

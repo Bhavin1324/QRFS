@@ -4,10 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
 import { ILoginCredential } from "../../types/CitizenCredentials";
 import { ApiKeysEnum, NavigateToRoute } from "../../types/enums";
-import { IPoliceOfficer } from "../../types/PoliceOfficer";
 import Breadcrumb, { IBreadCrumbProps } from "../CustomElement/Breadcrumb";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import { IPoliceStation } from "../../types/PoliceStation";
 
 const thisLocation: IBreadCrumbProps = {
   paths: [

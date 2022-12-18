@@ -9,6 +9,7 @@ export enum ApiKeysEnum {
   DISTRICTS = "api/districts",
   SUB_DIVISION = "api/subdivisions",
   CURRENT_USER = "api/loggedin",
+  CITIZEN_RESPONSE = "api/citizenresponses",
 }
 
 export enum NavigateToRoute {

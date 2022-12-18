@@ -23,3 +23,8 @@ export const TokenValidation = (): { type: TokenType; isExp: boolean } => {
   }
   return { isExp: isTokenExpired(decode.exp), type: decode.type };
 };
+
+export function convertToDashedDate(date: string) {
+  const arr = date.split("/");
+  return `${arr[2]}-${arr[1]}-${arr[0]}`;
+}

@@ -14,6 +14,7 @@ function Dashboard() {
       <div>
         <Navbar />
         <div className="container mt-3 px-3">
+          outlet
           <Outlet />
         </div>
       </div>
