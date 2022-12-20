@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
-interface IBarchartData {
+interface ILineChartData {
   data: any;
 }
-function BarChart(props: IBarchartData) {
-  return <Bar data={props.data} />;
+function LineChart(props: ILineChartData) {
+  return <Line data={props.data} />;
 }
 
-export default BarChart;
+export default LineChart;

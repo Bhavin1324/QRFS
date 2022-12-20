@@ -13,6 +13,7 @@ import Configuration from "../dashboard/PoliceConfig/Configuration";
 import AddPoliceStation from "../dashboard/PoliceStation/AddPoliceStation";
 import ConfigCockpit from "../dashboard/PoliceConfig/ConfigCockpit";
 import Profile from "../dashboard/Profile";
+import HPanel from "../dashboard/statistics/HPanel";
 
 function CommonRouter() {
   return (
@@ -40,6 +41,7 @@ function CommonRouter() {
               element={<FeedbackForm />}
             />
             <Route path={NavigateToRoute.DASHBOARD} element={<Dashboard />}>
+              <Route index element={<HPanel />} />
               <Route
                 path={NavigateToRoute.POLICE_STATIONS}
                 element={<PoliceStations />}

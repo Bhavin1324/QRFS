@@ -5,9 +5,9 @@ import { TokenValidation } from "../../Utils/Common";
 
 function Navbar() {
   const navList = useRef<HTMLUListElement>(null);
+  const HamBurger = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const role = TokenValidation();
-
   const checkSize = () => {
     if (window.innerWidth >= 768) {
       navList.current?.classList.add("nav-list");
@@ -17,8 +17,8 @@ function Navbar() {
       navList.current?.classList.remove("nav-list");
     }
   };
-  const toggleHam = (e: any) => {
-    e.currentTarget.classList.toggle("ham-active");
+  const toggleHam = () => {
+    HamBurger.current?.classList.toggle("ham-active");
     if (navList.current?.classList.contains("nav-mobile-list")) {
       navList.current?.classList.toggle("left-full");
     }
@@ -41,14 +41,29 @@ function Navbar() {
       <div className="branding">
         <div className="branding-text">QRF Panel</div>
       </div>
-      <ul className="nav-list left-full" ref={navList}>
+      <ul
+        className={
+          window.innerWidth >= 768
+            ? "nav-list left-full"
+            : "nav-mobile-list left-full"
+        }
+        ref={navList}
+      >
         <li className="nav-list-items">
-          <Link className="link-a" to={`/${NavigateToRoute.DASHBOARD}`}>
+          <Link
+            className="link-a"
+            to={`/${NavigateToRoute.DASHBOARD}`}
+            onClick={toggleHam}
+          >
             Home
           </Link>
         </li>
         <li className="nav-list-items">
-          <Link className="link-a" to={NavigateToRoute.POLICE_STATIONS}>
+          <Link
+            className="link-a"
+            to={NavigateToRoute.POLICE_STATIONS}
+            onClick={toggleHam}
+          >
             Police stations
           </Link>
         </li>
@@ -58,6 +73,7 @@ function Navbar() {
               <Link
                 className="link-a"
                 to={`${NavigateToRoute.CONFIG}/${NavigateToRoute.AREA}`}
+                onClick={toggleHam}
               >
                 Configuration
               </Link>
@@ -67,7 +83,11 @@ function Navbar() {
         {role.type === "MASTER" && (
           <>
             <li className="nav-list-items">
-              <Link className="link-a" to={`${NavigateToRoute.PROFILE}`}>
+              <Link
+                className="link-a"
+                to={`${NavigateToRoute.PROFILE}`}
+                onClick={toggleHam}
+              >
                 Profile
               </Link>
             </li>
@@ -88,7 +108,7 @@ function Navbar() {
           Logout
         </button>
       </div>
-      <div className="hamburger" onClick={toggleHam}>
+      <div ref={HamBurger} className="hamburger" onClick={toggleHam}>
         <hr className="slice" />
         <hr className="slice" />
         <hr className="slice" />

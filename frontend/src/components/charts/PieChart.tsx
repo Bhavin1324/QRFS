@@ -1,15 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
-import { Bar } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
-interface IBarchartData {
+interface IPiechartData {
   data: any;
 }
-function BarChart(props: IBarchartData) {
-  return <Bar data={props.data} />;
+function PieChart(props: IPiechartData) {
+  return (
+    <div className="w-4/6 mx-auto">
+      <Pie data={props.data} />
+    </div>
+  );
 }
 
-export default BarChart;
+export default PieChart;
