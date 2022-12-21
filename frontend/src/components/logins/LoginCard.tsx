@@ -166,15 +166,14 @@ function LoginCard(props: ILoginCardProps) {
       console.info(ex);
     }
   };
-
+  console.log(tokenValid);
   return (
     <>
-      {tokenValid.type === "CLIENT" && (
+      {tokenValid.type === "CLIENT" && !tokenValid.isExp && (
         <Navigate to={NavigateToRoute.FEEDBACK_FORM} />
       )}
-      {(tokenValid.type === "MASTER" || tokenValid.type === "ADMIN") && (
-        <Navigate to={NavigateToRoute.DASHBOARD} />
-      )}
+      {(tokenValid.type === "MASTER" || tokenValid.type === "ADMIN") &&
+        !tokenValid.isExp && <Navigate to={NavigateToRoute.DASHBOARD} />}
       <div className="i-card-container-login">
         <div className="i-card-body">
           {!isLoading && !isOtp && (

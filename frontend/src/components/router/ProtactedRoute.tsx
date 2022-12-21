@@ -10,7 +10,7 @@ function ProtactedRoute() {
       {!tokenValid.isExp ? (
         <Outlet />
       ) : tokenValid.type === "MASTER" || tokenValid.type === "ADMIN" ? (
-        <Navigate to={NavigateToRoute.OFFICER} />
+        <Navigate to={NavigateToRoute.HOME + NavigateToRoute.OFFICER} />
       ) : (
         <Navigate to={NavigateToRoute.HOME} />
       )}
