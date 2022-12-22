@@ -53,13 +53,16 @@ namespace QRFS.Helper
             List<int> rates = new List<int>();
             double totalRateCount = 0;
             foreach (var item in data) { 
-                rates.Add(RateKeyVal[item.OptionText]);
+                for(int i = 0; i < item.qCount; i++)
+                {
+                    rates.Add(RateKeyVal[item.OptionText]);
+                }
             }
             for(int i = 0; i < rates.Count; i++)
             {
                 totalRateCount += rates[i];
             }
-            return new CitizenResponseRatingInt() { Rating = (double)totalRateCount/rates.Count, StationId = data[0].StationId };
+            return new CitizenResponseRatingInt() { Rating = (double)System.Math.Round(totalRateCount/rates.Count,1), StationId = data[0].StationId };
         }
     }
 }
