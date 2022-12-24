@@ -121,7 +121,7 @@ export default function PoliceStations() {
         </div>
         {isLoading && (
           <div className="text-center mt-5">
-            <div className="spinner-grow" role="status">
+            <div className="spinner-grow text-teal-700" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
           </div>

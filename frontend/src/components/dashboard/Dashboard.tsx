@@ -6,7 +6,6 @@ import Navbar from "../layout/Navbar";
 
 function Dashboard() {
   const tokenValid = TokenValidation();
-  console.log(tokenValid);
   return (
     <>
       {(tokenValid.type === "CLIENT" || tokenValid.type === "") && (

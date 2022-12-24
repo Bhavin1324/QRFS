@@ -5,6 +5,7 @@ import { chartBackground } from "../../../types/Common";
 import { ApiKeysEnum } from "../../../types/enums";
 import { IPoliceStation } from "../../../types/PoliceStation";
 import { ICRPerMonth, IPoliceStationRating } from "../../../types/Statistics";
+import ServerAlert from "../../CustomElement/ServerAlert";
 import ChartSelector from "./ChartSelector";
 
 function GetGlobalGraphData(data: ICRPerMonth[]) {
@@ -27,6 +28,7 @@ function GetGlobalGraphData(data: ICRPerMonth[]) {
 }
 
 export default function HPanel() {
+  const [loading, setLoading] = useState(true);
   const [selectedPS, setSelectedPS] = useState<IPoliceStationRating>({
     rating: 0,
     stationId: "",
@@ -41,19 +43,27 @@ export default function HPanel() {
   );
   const ReqTotalFeedback = useFetch(
     `${process.env.REACT_APP_BASE_URL}${ApiKeysEnum.STATISTICS}`,
-    "GET"
+    "GET",
+    [],
+    localStorage.getItem("token") || ""
   );
   const ReqTotalFeedbackPsWise = useFetch(
     `${process.env.REACT_APP_BASE_URL}${ApiKeysEnum.STATISTICS}/`,
-    "GET"
+    "GET",
+    [],
+    localStorage.getItem("token") || ""
   );
   const ReqGetPoliceStation = useFetch(
     `${process.env.REACT_APP_BASE_URL}${ApiKeysEnum.POLICE_STATIONS}`,
-    "GET"
+    "GET",
+    [],
+    localStorage.getItem("token") || ""
   );
   const ReqGetPsRating = useFetch(
     `${process.env.REACT_APP_BASE_URL}${ApiKeysEnum.RATING}/`,
-    "GET"
+    "GET",
+    [],
+    localStorage.getItem("token") || ""
   );
 
   function changeHandler(
@@ -69,15 +79,22 @@ export default function HPanel() {
       .catch((ex) => console.log("Change handler excetion rating", ex));
   }
 
+  async function GetInitialData() {
+    try {
+      const lstPoliceStation = await ReqGetPoliceStation();
+      setPoliceStations(lstPoliceStation);
+      const totalFb = await ReqTotalFeedback();
+      setTotalFeedback(totalFb);
+      if (totalFb && lstPoliceStation) {
+        setLoading(false);
+      }
+    } catch (ex) {
+      setLoading(false);
+      console.log("Exception in getting initial data:" + ex);
+    }
+  }
   useEffect(() => {
-    ReqGetPoliceStation()
-      .then((result) => setPoliceStations(result))
-      .catch((ex) => console.log("Exception in fetching police station", ex));
-    ReqTotalFeedback()
-      .then((result) => {
-        setTotalFeedback(result);
-      })
-      .catch((ex) => console.log("Exception in cathing response", ex));
+    GetInitialData();
   }, []);
 
   return (
@@ -119,12 +136,20 @@ export default function HPanel() {
           )}
         </div>
       </div>
-      <div className="mx-auto w-3/4">
-        <ChartSelector
-          data={GetGlobalGraphData(
-            !formValue.stationId ? totalFeedbback : stationWiseResponse
-          )}
-        />
+      <div className="mx-auto w-3/4 text-center">
+        {loading ? (
+          <div className="spinner-grow text-teal-700 mt-2" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        ) : totalFeedbback.length > 0 ? (
+          <ChartSelector
+            data={GetGlobalGraphData(
+              !formValue.stationId ? totalFeedbback : stationWiseResponse
+            )}
+          />
+        ) : (
+          <ServerAlert message="Unable to get data from server" />
+        )}
       </div>
     </div>
   );

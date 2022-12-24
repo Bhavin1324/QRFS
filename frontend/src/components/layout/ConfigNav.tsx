@@ -7,7 +7,7 @@ function ConfigNav() {
     <div className="container">
       <div className="row">
         <div className="col-xs-12">
-          <ul className="nav gap-2">
+          <ul className="nav gap-2 mb-2">
             <li className="nav-item">
               <NavLink
                 className={({ isActive }) =>

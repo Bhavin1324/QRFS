@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetch } from "../../../hooks/useFetch";
@@ -128,7 +129,7 @@ function SinglePoliceStation() {
 
           {isLoading ? (
             <div className="text-center mt-5">
-              <div className="spinner-grow" role="status">
+              <div className="spinner-grow text-teal-700" role="status">
                 <span className="visually-hidden">Loading...</span>
               </div>
             </div>

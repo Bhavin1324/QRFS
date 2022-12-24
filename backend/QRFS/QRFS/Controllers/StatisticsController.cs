@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Math.EC.Rfc7748;
@@ -25,6 +26,7 @@ namespace QRFS.Controllers
         }
         // GET: api/<StatisticsController>
         [HttpGet]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<IEnumerable<CitizenResponsePerMonth>> GetCitizenResponsePerMonth()
         {
             try
@@ -41,6 +43,7 @@ namespace QRFS.Controllers
 
         // GET api/<StatisticsController>/5
         [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<IEnumerable<CitizenResponsePerMonth>> GetCitizenResponsePerMonthByPoliceStation(string id)
         {
             try
@@ -56,6 +59,7 @@ namespace QRFS.Controllers
         }
 
         [HttpGet("rating/{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<CitizenResponseRatingInt>> GetRating(string id) {
             var lstOptions = await Context.Options.ToListAsync();  
             var lstCitizenResponse = await Context.CitizenResponse.ToListAsync();
