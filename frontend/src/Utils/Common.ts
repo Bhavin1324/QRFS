@@ -24,7 +24,12 @@ export const TokenValidation = (): { type: TokenType; isExp: boolean } => {
   return { isExp: isTokenExpired(decode.exp), type: decode.type };
 };
 
-export function convertToDashedDate(date: string) {
+export function convertToDashedDate(date: string): string {
   const arr = date.split("/");
   return `${arr[2]}-${arr[0]}-${arr[1]}`;
+}
+
+export function GetPreviousYearsList(): number[] {
+  const year = new Date().getFullYear();
+  return Array.from(new Array(20), (value, index) => year - index);
 }

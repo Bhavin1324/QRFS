@@ -5,6 +5,7 @@ import { chartBackground } from "../../../types/Common";
 import { ApiKeysEnum } from "../../../types/enums";
 import { IPoliceStation } from "../../../types/PoliceStation";
 import { ICRPerMonth, IPoliceStationRating } from "../../../types/Statistics";
+import { GetPreviousYearsList } from "../../../Utils/Common";
 import ServerAlert from "../../CustomElement/ServerAlert";
 import ChartSelector from "./ChartSelector";
 
@@ -26,9 +27,10 @@ function GetGlobalGraphData(data: ICRPerMonth[]) {
     ],
   };
 }
-
+const yearsPrev20: number[] = GetPreviousYearsList();
 export default function HPanel() {
   const [loading, setLoading] = useState(true);
+  const [year, setYear] = useState(new Date().getFullYear().toString());
   const [selectedPS, setSelectedPS] = useState<IPoliceStationRating>({
     rating: 0,
     stationId: "",
@@ -71,12 +73,26 @@ export default function HPanel() {
   ) {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
-    ReqTotalFeedbackPsWise(value)
+    ReqTotalFeedbackPsWise(value, `?year=${year}`)
       .then((result) => setStationWiseResponse(result))
       .catch((ex) => console.log("Change handler excetion feedback", ex));
     ReqGetPsRating(value)
       .then((result) => setSelectedPS(result))
       .catch((ex) => console.log("Change handler excetion rating", ex));
+  }
+
+  function yearChangeHandler(
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) {
+    setYear(e.target.value);
+    ReqTotalFeedback("", `?year=${e.target.value}`)
+      .then((res) => setTotalFeedback(res))
+      .catch((ex) => console.log("year dropdown exception: ", ex));
+    if (formValue.stationId) {
+      ReqTotalFeedbackPsWise(formValue.stationId, `?year=${e.target.value}`)
+        .then((result) => setStationWiseResponse(result))
+        .catch((ex) => console.log("year dropdown exception 2:", ex));
+    }
   }
 
   async function GetInitialData() {
@@ -118,14 +134,30 @@ export default function HPanel() {
                   );
                 })}
               </select>
-              <label>Select chart type</label>
+              <label>Select police station</label>
             </div>
           </div>
-          <div className="col-md-4"></div>
+          <div className="col-md-4">
+            <div className="form-floating">
+              <select
+                className="form-control mb-1"
+                onChange={yearChangeHandler}
+              >
+                {yearsPrev20.map((item: number) => {
+                  return (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  );
+                })}
+              </select>
+              <label>Select year</label>
+            </div>
+          </div>
           {selectedPS.rating > 0 && (
             <div className="col-md-4 flex">
               <div className="self-center fs-5 mr-3">
-                Average rating of this police station is
+                Rating of this police station from 5 is
               </div>
               <div className="self-center">
                 <span className="fs-2 p-4 bg-teal-700 text-white rounded-full">
@@ -141,12 +173,16 @@ export default function HPanel() {
           <div className="spinner-grow text-teal-700 mt-2" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        ) : totalFeedbback.length > 0 ? (
-          <ChartSelector
-            data={GetGlobalGraphData(
-              !formValue.stationId ? totalFeedbback : stationWiseResponse
-            )}
-          />
+        ) : policeStations.length > 0 ? (
+          totalFeedbback.length > 0 ? (
+            <ChartSelector
+              data={GetGlobalGraphData(
+                !formValue.stationId ? totalFeedbback : stationWiseResponse
+              )}
+            />
+          ) : (
+            <div className="text-slate-500 text-lg">Unable to get records!</div>
+          )
         ) : (
           <ServerAlert message="Unable to get data from server" />
         )}

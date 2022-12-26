@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 using QRFS.Helper;
 using QRFS.Models;
 using QRFS.QueryModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,13 +29,15 @@ namespace QRFS.Controllers
         // GET: api/<StatisticsController>
         [HttpGet]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IEnumerable<CitizenResponsePerMonth>> GetCitizenResponsePerMonth()
+        public async Task<IEnumerable<CitizenResponsePerMonth>> GetCitizenResponsePerMonth(string? year)
         {
             try
             {
+                string y = !year.IsNullOrEmpty() ? year : DateTime.Now.Year.ToString();
                 List<CitizenResponse> lstResponse = await Context.CitizenResponse.ToListAsync();
                 var responseQueryData = from c in lstResponse.GroupBy(x => x.ResponseDate) select new CitizenResponsePerDate() { qCount = c.Count(), DateString = c.First().ResponseDate };
-                return QueryHelper.DateToMonthResp(responseQueryData.ToList());
+                var queryDataDesireDate = responseQueryData.ToList().Where(s => s.DateString.Contains(y));
+                return QueryHelper.DateToMonthResp(queryDataDesireDate.ToList());
             }
             catch
             {
@@ -44,13 +48,15 @@ namespace QRFS.Controllers
         // GET api/<StatisticsController>/5
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IEnumerable<CitizenResponsePerMonth>> GetCitizenResponsePerMonthByPoliceStation(string id)
+        public async Task<IEnumerable<CitizenResponsePerMonth>> GetCitizenResponsePerMonthByPoliceStation(string id, string? year)
         {
             try
             {
+                string y = !year.IsNullOrEmpty() ? year : DateTime.Now.Year.ToString();
                 List<CitizenResponse> lstResponse = await Context.CitizenResponse.ToListAsync();
                 var responseQueryData = from c in lstResponse.Where(x => x.StationId == id).GroupBy(x => x.ResponseDate) select new CitizenResponsePerDate() { qCount = c.Count(), DateString = c.First().ResponseDate };
-                return QueryHelper.DateToMonthResp(responseQueryData.ToList());
+                var queryDataDesireDate = responseQueryData.ToList().Where(s => s.DateString.Contains(y));
+                return QueryHelper.DateToMonthResp(queryDataDesireDate.ToList());
             }
             catch
             {

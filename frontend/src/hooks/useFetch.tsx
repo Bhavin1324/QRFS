@@ -7,9 +7,15 @@ export function useFetch<T>(
   token?: string
 ) {
   method = method || "GET";
-  async function MakeHttpRequest(id?: string) {
+  async function MakeHttpRequest(id?: string, query?: string) {
     const response = await fetch(
-      id ? url + id : url,
+      id && query
+        ? url + id + query
+        : id
+        ? url + id
+        : query
+        ? url + query
+        : url,
       method !== "GET"
         ? {
             method: method,
