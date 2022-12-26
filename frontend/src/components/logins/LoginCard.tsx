@@ -132,7 +132,8 @@ function LoginCard(props: ILoginCardProps) {
               ...formValues,
               errors: {
                 ...errors,
-                validPass: "Password is invalid for given email",
+                validPass:
+                  "Password is invalid for given email or unregistered email found",
               },
             });
           }
@@ -166,7 +167,6 @@ function LoginCard(props: ILoginCardProps) {
       console.info(ex);
     }
   };
-  console.log(tokenValid);
   return (
     <>
       {tokenValid.type === "CLIENT" && !tokenValid.isExp && (

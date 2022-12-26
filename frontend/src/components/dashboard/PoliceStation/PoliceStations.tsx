@@ -68,11 +68,18 @@ export default function PoliceStations() {
     }).then((result) => {
       if (result.isConfirmed) {
         try {
-          ReqDeleteStation(id).then((result) => setSelectedStation(result));
+          ReqDeleteStation(id).then((result) => {
+            setSelectedStation(result);
+            if (result) {
+              Swal.fire("Deleted!", "Record deleted successfully.", "success");
+            } else {
+              Swal.fire("Error!", "Unable to delete record.", "error");
+            }
+          });
         } catch (ex) {
-          console.log("delete execption");
+          console.log("Police station delete", ex);
+          Swal.fire("Error!", "Unable to delete record.", "error");
         }
-        Swal.fire("Deleted!", "Record deleted successfully.", "success");
       }
     });
   };

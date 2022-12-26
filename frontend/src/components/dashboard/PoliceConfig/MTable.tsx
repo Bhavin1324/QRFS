@@ -133,22 +133,62 @@ export default function MTable(props: IMTableProps) {
       if (result.isConfirmed) {
         try {
           if (route[route.length - 1] === NavigateToRoute.AREA) {
-            ReqDeleteArea(id).then((result) => props.onEffect(result, true));
+            ReqDeleteArea(id).then((result) => {
+              if (result) {
+                props.onEffect(result, true);
+                Swal.fire(
+                  "Deleted!",
+                  "Record deleted successfully.",
+                  "success"
+                );
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Conflict foreign key",
+                  text: "Delete police stations first which contains this area",
+                });
+              }
+            });
           }
           if (route[route.length - 1] === NavigateToRoute.DIV) {
-            ReqDeleteSubDivision(id).then((result) =>
-              props.onEffect(result, true)
-            );
+            ReqDeleteSubDivision(id).then((result) => {
+              if (result) {
+                props.onEffect(result, true);
+                Swal.fire(
+                  "Deleted!",
+                  "Record deleted successfully.",
+                  "success"
+                );
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Conflict foreign key",
+                  text: "Delete police stations first which contains this sub division",
+                });
+              }
+            });
           }
           if (route[route.length - 1] === NavigateToRoute.DISTRICT) {
-            ReqDeleteDistrict(id).then((result) =>
-              props.onEffect(result, true)
-            );
+            ReqDeleteDistrict(id).then((result) => {
+              if (result) {
+                props.onEffect(result, true);
+                Swal.fire(
+                  "Deleted!",
+                  "Record deleted successfully.",
+                  "success"
+                );
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Conflict foreign key",
+                  text: "Delete police stations first which contains this district",
+                });
+              }
+            });
           }
         } catch (ex) {
           console.log("Delete config excpeiton : ", ex);
         }
-        Swal.fire("Deleted!", "Record deleted successfully.", "success");
       }
     });
   }

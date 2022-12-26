@@ -107,6 +107,10 @@ namespace QRFS.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<PoliceStation>> DeletePoliceStation(string id)
         {
+            List<CitizenResponse> lstCr = await _context.CitizenResponse.Where(x => x.StationId == id).ToListAsync();
+            _context.CitizenResponse.RemoveRange(lstCr);
+            List<PoliceOfficer> lstPo = await _context.PoliceOfficer.Where(x => x.StationId == id).ToListAsync();
+            _context.PoliceOfficer.RemoveRange(lstPo);
             var policeStation = await _context.PoliceStation.FindAsync(id);
             if (policeStation == null)
             {
